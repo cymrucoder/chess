@@ -8,15 +8,21 @@ import blarg.chess.view.BoardView;
  */
 public class Board {
 
-    private static final int NONE = 0;
-    private static final int PAWN = 1;
-    private static final int BISHOP = 2;
-    private static final int KNIGHT = 3;
-    private static final int ROOK = 4;
-    private static final int QUEEN = 5;
-    private static final int KING = 6;
+    public static final int NONE = -1;
+    public static final int BLACK_PAWN = 0;
+    public static final int BLACK_BISHOP = 1;
+    public static final int BLACK_KNIGHT = 2;
+    public static final int BLACK_ROOK = 3;
+    public static final int BLACK_QUEEN = 4;
+    public static final int BLACK_KING = 5;
+    public static final int WHITE_PAWN = 6;
+    public static final int WHITE_BISHOP = 7;
+    public static final int WHITE_KNIGHT = 8;
+    public static final int WHITE_ROOK = 9;
+    public static final int WHITE_QUEEN = 10;
+    public static final int WHITE_KING = 11;
     
-    private int pieces[][];
+    private Piece pieces[][];
     
     public static void main(String args[]) {
         Board board = new Board();
@@ -26,49 +32,69 @@ public class Board {
 
     public Board() {
         
-        pieces = new int[8][8];
+        pieces = new Piece[8][8];
         setupPieces();
         
         
         this.bv = new BoardView();
-        bv.drawBoard(pieces);
+        bv.drawBoard(generateIntBoard());
 
     }
     
     private void setupPieces() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                pieces[i][j] = NONE;
+                pieces[i][j] = null;
             }
         }
         
         for (int i = 0; i < 8; i++) {
-            pieces[i][1] = PAWN;
-            pieces[i][6] = PAWN * 20;
+            pieces[i][1] = new Piece(Piece.PAWN, Piece.BLACK);
+            pieces[i][6] = new Piece(Piece.PAWN, Piece.WHITE);
         }
         
-        pieces[0][0] = ROOK;
-        pieces[7][0] = ROOK;
+//        pieces[0][0] = ROOK;
+//        pieces[7][0] = ROOK;
+//        
+//        pieces[0][7] = ROOK * 20;
+//        pieces[7][7] = ROOK * 20;
+//        
+//        pieces[1][0] = KNIGHT;
+//        pieces[6][0] = KNIGHT;
+//        
+//        pieces[1][7] = KNIGHT * 20;
+//        pieces[6][7] = KNIGHT * 20;
+//        
+//        pieces[2][0] = BISHOP;
+//        pieces[5][0] = BISHOP;
+//        
+//        pieces[2][7] = BISHOP * 20;
+//        pieces[5][7] = BISHOP * 20;
+//        
+//        pieces[4][0] = QUEEN;
+//        pieces[3][0] = KING;
+//        
+//        pieces[3][7] = QUEEN * 20;
+//        pieces[4][7] = KING * 20;
+    }
+    
+    private int[][] generateIntBoard() {
+        int intBoard[][] = new int[8][8];
         
-        pieces[0][7] = ROOK * 20;
-        pieces[7][7] = ROOK * 20;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (pieces[i][j] != null) {
+                    if (pieces[i][j].getColor() == Piece.BLACK) {
+                        intBoard[i][j] = BLACK_PAWN;
+                    } else {
+                        intBoard[i][j] = WHITE_PAWN;
+                    }
+                } else {
+                    intBoard[i][j] = NONE;
+                }
+            }
+        }
         
-        pieces[1][0] = KNIGHT;
-        pieces[6][0] = KNIGHT;
-        
-        pieces[1][7] = KNIGHT * 20;
-        pieces[6][7] = KNIGHT * 20;
-        
-        pieces[2][0] = BISHOP;
-        pieces[5][0] = BISHOP;
-        
-        pieces[2][7] = BISHOP * 20;
-        pieces[5][7] = BISHOP * 20;
-        
-        pieces[4][0] = QUEEN;
-        pieces[3][0] = KING;
-        
-        pieces[3][7] = QUEEN * 20;
-        pieces[4][7] = KING * 20;
+        return intBoard;
     }
 }

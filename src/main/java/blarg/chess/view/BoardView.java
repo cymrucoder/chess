@@ -1,6 +1,7 @@
 package blarg.chess.view;
 
 import blarg.chess.Board;
+import blarg.chess.Piece;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -74,17 +75,18 @@ public class BoardView extends JFrame {
                     if (board[0].length != 0) {
                         for (int i = 0; i < board.length; i++) {
                             for (int j = 0; j < board[i].length; j++) {
-                                if (board[i][j] != 0) {
+                                if (board[i][j] != Board.NONE) {
                                     int piece = board[i][j];
-                                    int color = 0;
-                                    if (piece > 6) {
-                                        piece /= 20;
-                                        color = 1;
+                                    int color = Piece.BLACK;
+                                    if (piece > Board.BLACK_KING) {
+                                        color = Piece.WHITE;
                                     }
                                     
-                                    int adjustedPiece = piece - 1;// 0 is NONE/no piece but the image starts with pawns so just need to take one off to line them up
+                                    piece = piece % Board.WHITE_PAWN;
                                     
-                                    g.drawImage(image, 100 * i, 100 * j, (100 * i) + 100, (100 * j) + 100, (adjustedPiece * 200), (color * 200), (adjustedPiece * 200) + 200, (color * 200) + 200, rootPane);
+                                    //int adjustedPiece = piece - 1;// 0 is NONE/no piece but the image starts with pawns so just need to take one off to line them up
+                                    
+                                    g.drawImage(image, 100 * i, 100 * j, (100 * i) + 100, (100 * j) + 100, (piece * 200), (color * 200), (piece * 200) + 200, (color * 200) + 200, rootPane);
                                 }
                             }
                         }

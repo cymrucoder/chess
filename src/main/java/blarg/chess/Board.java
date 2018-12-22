@@ -44,7 +44,31 @@ public class Board {
         
         for (int i = 0; i < 8; i++) {
             pieces[i][1] = PAWN;
-            pieces[i][6] = PAWN;
+            pieces[i][6] = PAWN * 20;
         }
+        
+        pieces[0][0] = ROOK;
+        pieces[7][0] = ROOK;
+        
+        pieces[0][7] = ROOK * 20;
+        pieces[7][7] = ROOK * 20;
+        
+        pieces[1][0] = KNIGHT;
+        pieces[6][0] = KNIGHT;
+        
+        pieces[1][7] = KNIGHT * 20;
+        pieces[6][7] = KNIGHT * 20;
+        
+        pieces[2][0] = BISHOP;
+        pieces[5][0] = BISHOP;
+        
+        pieces[2][7] = BISHOP * 20;
+        pieces[5][7] = BISHOP * 20;
+        
+        pieces[4][0] = QUEEN;
+        pieces[3][0] = KING;
+        
+        pieces[3][7] = QUEEN * 20;
+        pieces[4][7] = KING * 20;
     }
 }

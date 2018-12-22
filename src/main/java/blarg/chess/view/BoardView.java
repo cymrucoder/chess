@@ -1,8 +1,15 @@
 package blarg.chess.view;
 
+import blarg.chess.Board;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -15,6 +22,8 @@ public class BoardView extends JFrame {
     private static final int BOARD_WIDTH = 800;
     private static final int BOARD_HEIGHT = 800;
     
+    private int board[][];
+    
     public BoardView() {
         DrawCanvas dc = new DrawCanvas();
         dc.setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
@@ -23,6 +32,11 @@ public class BoardView extends JFrame {
         pack();
         setTitle("Probably chess");
         setVisible(true);
+    }
+    
+    public void drawBoard(int board[][]) {
+        this.board = board;
+        repaint();
     }
     
     private class DrawCanvas extends JPanel {
@@ -38,13 +52,38 @@ public class BoardView extends JFrame {
                     if (isWhite) {
                         g.setColor(Color.WHITE);
                     } else {
-                        g.setColor(Color.BLACK);
+                        g.setColor(Color.GRAY);
                     }
                     g.fillRect((BOARD_WIDTH / 8) * j, (BOARD_HEIGHT / 8) * i, (BOARD_WIDTH / 8), (BOARD_HEIGHT / 8));
                      isWhite = !isWhite;
                 }
                 startSquareIsWhite = !startSquareIsWhite;
             }
+            
+            Image image = null;
+            
+            try {
+                image = ImageIO.read(new File("images\\mydonechessbits.png"));
+            } catch (IOException ex) {
+                Logger.getLogger(BoardView.class.getName()).log(Level.SEVERE, null, ex);
+                System.exit(1);
+            }
+            
+            if (board != null) {
+                if (board.length != 0) {
+                    if (board[0].length != 0) {
+                        for (int i = 0; i < board.length; i++) {
+                            for (int j = 0; j < board[i].length; j++) {
+                                if (board[i][j] != 0) {
+                                    g.drawImage(image, 100 * i, 100 * j, (100 * i) + 100, (100 * j) + 100, 0, 0, 200, 200, rootPane);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            //g.drawImage(image, 0, 0, 100, 100, 0, 0, 200, 200, rootPane);
         }
     }
 }

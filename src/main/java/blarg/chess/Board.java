@@ -30,7 +30,9 @@ public class Board {
 
     public static void main(String args[]) {
         Board board = new Board();
-        board.draw();
+        //board.setupView();
+        
+        board.runGames(100000);
     }
 
     private BoardView bv;
@@ -51,7 +53,7 @@ public class Board {
         onePlayerStuck = false;
     }
     
-    public void draw() {
+    public void setupView() {
         this.bv = new BoardView(this);
         bv.drawBoard(generateIntBoard());
     }
@@ -124,9 +126,12 @@ public class Board {
         if (moveCandidates.isEmpty()) {
             //System.out.println("");
             if (onePlayerStuck) {
-                System.out.println(calculateScore());
+                //System.out.println(calculateScore());
+                //setupBoard();
+                notifyGameEnd(calculateScore());
             } else {
                 onePlayerStuck = true;
+                isWhitesTurn = !isWhitesTurn;
             }
             
         } else {
@@ -139,10 +144,11 @@ public class Board {
                 chosenMove = blackPlayer.decideMove(moveCandidates);
             }            
             makeMove(chosenMove);            
-            bv.drawBoard(generateIntBoard());
-        }
-        
-        isWhitesTurn = !isWhitesTurn;
+            if (bv != null) {
+                bv.drawBoard(generateIntBoard());
+            }
+            isWhitesTurn = !isWhitesTurn;
+        }        
     }
     
     public void makeMove(Move move) {
@@ -157,7 +163,6 @@ public class Board {
         pieces[oldX][oldY] = null;
 
         if (pieces[newX][newY] != null) {// If moving onto a piece, capture it
-            System.out.println("Captured " + pieces[newX][newY]);
             pieces[newX][newY] = null;
         }
 
@@ -185,7 +190,7 @@ public class Board {
     }
 
     public void notifyKeyPress() {
-        nextPlay();
+        //nextPlay();
     }
     
     public int calculateScore() {
@@ -194,10 +199,37 @@ public class Board {
         for (int i = 0; i < 8; i++) {
             if (generateIntBoard()[i][0] == WHITE_PAWN) {
                 score++;
-            } else if (generateIntBoard()[i][7] == BLACK_PAWN) {
+            } if (generateIntBoard()[i][7] == BLACK_PAWN) {
                 score--;
             }
         }
         return score;
+    }
+
+    public void runPhessGames() {
+        
+    }
+
+    private int whiteWins = 0;
+    private int blackWins = 0;
+    private int totalGames = 0;
+    
+    private void notifyGameEnd(int score) {
+       // System.out.println(score);
+        totalGames++;
+        if (score > 0) {
+            whiteWins++;
+        } else if (score < 0) {
+            blackWins++;
+        }
+        setupBoard();
+    }
+    
+    private void runGames(int count) {
+        while (totalGames < count) {
+            nextPlay();
+        }
+        
+        System.out.println("White wins " + whiteWins + " black wins " + blackWins + " black won " + ((float)blackWins / (float)whiteWins) * 100 + "% of what white won");
     }
 }

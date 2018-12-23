@@ -1,5 +1,6 @@
 package player.behavior;
 
+import blarg.chess.Board;
 import blarg.chess.Move;
 import java.util.List;
 
@@ -8,13 +9,16 @@ import java.util.List;
  * @author cymrucoder
  */
 public abstract class PlayerBehavior {
-
-    public static PlayerBehavior getBehaviorForName(String behaviorName) {
+    protected Board board;    
+    
+    public static PlayerBehavior getBehaviorForName(Board board, String behaviorName) {
         switch (behaviorName) {
             case "random":
-                return new RandomBehavior();
+                return new RandomBehavior(board);
             case "network": 
-                return new NetworkBehavior();
+                return new NetworkBehavior(board);
+            case "alwayscap": 
+                return new AlwaysCaptureBehavior(board);
             default:
                 System.exit(1);
                 return null;

@@ -14,7 +14,7 @@ public class Player {
     
     public Player(Board board, String behaviorName) {
         this.board = board;
-        behavior = PlayerBehavior.getBehaviorForName(behaviorName);
+        behavior = PlayerBehavior.getBehaviorForName(board, behaviorName);
     }
     
     public Move decideMove(List<Move> candidateMoves) {

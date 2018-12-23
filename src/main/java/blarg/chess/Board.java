@@ -35,14 +35,20 @@ public class Board {
 
     private BoardView bv;
     private boolean isWhitesTurn;
+    private boolean onePlayerStuck;
 
     public Board() {
 
         whitePlayer = new Player(this, "random");
         blackPlayer = new Player(this, "random");
+        setupBoard();
+    }
+    
+    public void setupBoard() {
         pieces = new Piece[8][8];
         setupPieces();
         isWhitesTurn = true;
+        onePlayerStuck = false;
     }
     
     public void draw() {
@@ -116,8 +122,15 @@ public class Board {
         }
 
         if (moveCandidates.isEmpty()) {
-            System.out.println("Stalemate");
+            //System.out.println("");
+            if (onePlayerStuck) {
+                System.out.println(calculateScore());
+            } else {
+                onePlayerStuck = true;
+            }
+            
         } else {
+            onePlayerStuck = false;
             Move chosenMove;
             
             if (isWhitesTurn) {
@@ -156,14 +169,14 @@ public class Board {
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (pieces[i][j] != null) {
-                    if (pieces[i][j].getColor() == Piece.BLACK) {
-                        intBoard[i][j] = BLACK_PAWN;
+                if (pieces[j][i] != null) {
+                    if (pieces[j][i].getColor() == Piece.BLACK) {
+                        intBoard[j][i] = BLACK_PAWN;
                     } else {
-                        intBoard[i][j] = WHITE_PAWN;
+                        intBoard[j][i] = WHITE_PAWN;
                     }
                 } else {
-                    intBoard[i][j] = NONE;
+                    intBoard[j][i] = NONE;
                 }
             }
         }
@@ -173,5 +186,18 @@ public class Board {
 
     public void notifyKeyPress() {
         nextPlay();
+    }
+    
+    public int calculateScore() {
+        int score = 0;
+        
+        for (int i = 0; i < 8; i++) {
+            if (generateIntBoard()[i][0] == WHITE_PAWN) {
+                score++;
+            } else if (generateIntBoard()[i][7] == BLACK_PAWN) {
+                score--;
+            }
+        }
+        return score;
     }
 }

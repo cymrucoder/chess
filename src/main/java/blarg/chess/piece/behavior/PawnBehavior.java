@@ -30,12 +30,12 @@ public class PawnBehavior extends PieceBehavior {
             moveOffset = -1;
         }
 
-        if (intBoard[x][y + moveOffset] == Board.NONE) {// Nothing one in front
+        if (y + moveOffset < intBoard[x].length && y + moveOffset >= 0 && intBoard[x][y + moveOffset] == Board.NONE) {// Can always move one forward if there's an empty square, and the square exists
             moves.add(new Move(x, y + moveOffset));
         }
 
         if ((piece.getColor() == Piece.BLACK && y == 1) || (piece.getColor() == Piece.WHITE && y == 6)) {// Can move two if at the start
-            if (intBoard[x][y + (moveOffset * 2)] == Board.NONE) {
+            if (intBoard[x][y + moveOffset] == Board.NONE && intBoard[x][y + (moveOffset * 2)] == Board.NONE) {// Path must be clear
                 moves.add(new Move(x, y + (moveOffset * 2)));
             }
         }

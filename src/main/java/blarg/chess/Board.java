@@ -33,7 +33,8 @@ public class Board {
         Board board = new Board();
     }
 
-    BoardView bv;
+    private BoardView bv;
+    private boolean isWhitesTurn;
 
     public Board() {
 
@@ -44,6 +45,7 @@ public class Board {
         this.bv = new BoardView(this);
         bv.drawBoard(generateIntBoard());
 
+        isWhitesTurn = true;
         //nextPlay();
         //bv.drawBoard(generateIntBoard());
     }
@@ -87,20 +89,13 @@ public class Board {
 //        pieces[4][7] = KING * 20;
     }
 
-//    private class MoveCandidate {
-//        //int x;
-//        //int y;
-//        Move move;
-//
-//        public MoveCandidate(int x, int y, Move move) {
-//            //this.piece = piece;
-//            this.x = x;
-//            this.y = y;
-//            this.move = move;
-//        }
-//    }
-
     private void nextPlay() {
+
+        int colorTurn = Piece.WHITE;
+
+        if (!isWhitesTurn) {
+            colorTurn = Piece.BLACK;
+        }
 
         List<String> movablePieces = new ArrayList<>();
         Map<String, List<Move>> moveCandidates = new HashMap<>();
@@ -108,15 +103,15 @@ public class Board {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (pieces[i][j] != null) {
-                    if (pieces[i][j].getColor() == Piece.WHITE) {
+                    if (pieces[i][j].getColor() == colorTurn) {
                         List<Move> moves = pieces[i][j].getMoves();
-                        
+
                         if (moves.size() > 0) {// Pieces that can't moved can just be ignored
                             movablePieces.add("" + i + "," + j);
                             moveCandidates.put("" + i + "," + j, new ArrayList<>());
                             for (Move move : moves) {
                                 moveCandidates.get("" + i + "," + j).add(move);
-                            }                            
+                            }
                         }
                     }
                 }
@@ -149,6 +144,8 @@ public class Board {
 
             bv.drawBoard(generateIntBoard());
         }
+        
+        isWhitesTurn = !isWhitesTurn;
     }
 
     public int[][] generateIntBoard() {

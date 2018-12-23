@@ -30,6 +30,7 @@ public class Board {
 
     public static void main(String args[]) {
         Board board = new Board();
+        board.draw();
     }
 
     private BoardView bv;
@@ -41,12 +42,12 @@ public class Board {
         blackPlayer = new Player(this, "random");
         pieces = new Piece[8][8];
         setupPieces();
-
-
+        isWhitesTurn = true;
+    }
+    
+    public void draw() {
         this.bv = new BoardView(this);
         bv.drawBoard(generateIntBoard());
-
-        isWhitesTurn = true;
     }
 
     public Piece[][] getPieces() {
@@ -123,28 +124,31 @@ public class Board {
                 chosenMove = whitePlayer.decideMove(moveCandidates);
             } else {
                 chosenMove = blackPlayer.decideMove(moveCandidates);
-            }
-
-            int oldX = chosenMove.getOldX();
-            int oldY = chosenMove.getOldY();
-            int newX = chosenMove.getNewX();
-            int newY = chosenMove.getNewY();
-            
-            pieces[oldX][oldY].move(chosenMove);
-            
-            Piece tmpPiece = pieces[oldX][oldY];
-            pieces[oldX][oldY] = null;
-            
-            if (pieces[newX][newY] != null) {// If moving onto a piece, capture it
-                System.out.println("Captured " + pieces[newX][newY]);
-                pieces[newX][newY] = null;
-            }
-            
-            pieces[newX][newY] = tmpPiece;
+            }            
+            makeMove(chosenMove);            
             bv.drawBoard(generateIntBoard());
         }
         
         isWhitesTurn = !isWhitesTurn;
+    }
+    
+    public void makeMove(Move move) {
+        int oldX = move.getOldX();
+        int oldY = move.getOldY();
+        int newX = move.getNewX();
+        int newY = move.getNewY();
+
+        pieces[oldX][oldY].move(move);
+
+        Piece tmpPiece = pieces[oldX][oldY];
+        pieces[oldX][oldY] = null;
+
+        if (pieces[newX][newY] != null) {// If moving onto a piece, capture it
+            System.out.println("Captured " + pieces[newX][newY]);
+            pieces[newX][newY] = null;
+        }
+
+        pieces[newX][newY] = tmpPiece;
     }
 
     public int[][] generateIntBoard() {

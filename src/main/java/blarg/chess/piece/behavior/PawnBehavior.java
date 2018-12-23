@@ -30,15 +30,29 @@ public class PawnBehavior extends PieceBehavior {
             moveOffset = -1;
         }
 
-        if (y + moveOffset < intBoard[x].length && y + moveOffset >= 0 && intBoard[x][y + moveOffset] == Board.NONE) {// Can always move one forward if there's an empty square, and the square exists
-            moves.add(new Move(x, y + moveOffset));
+        if (y + moveOffset < intBoard[x].length && y + moveOffset >= 0) {// Check if we're at the far ends of the board to prevent null pointer exceptions.  I think this can't actually happen in chess because promotions but we'll keep it anyway
+            if (intBoard[x][y + moveOffset] == Board.NONE) {// Can always move one forward if there's an empty square
+                moves.add(new Move(x, y + moveOffset));
+            }
+            
+            // Don't look for captures left/right if we're on the left/right side of the board
+            if (x > 0) {
+                if (intBoard[x - 1][y + moveOffset] != Board.NONE && (intBoard[x - 1][y + moveOffset] % Board.WHITE_PAWN != Board.BLACK_KING) && piece.getColor() != board.getPieces()[x - 1][y + moveOffset].getColor()) {// We can capture any opposing piece other than a king
+                    moves.add(new Move(x - 1, y + moveOffset));
+                }
+            }
+            if (x < intBoard[x].length - 1) {
+                if (intBoard[x + 1][y + moveOffset] != Board.NONE && (intBoard[x + 1][y + moveOffset] % Board.WHITE_PAWN != Board.BLACK_KING && piece.getColor() != board.getPieces()[x + 1][y + moveOffset].getColor())) {
+                    moves.add(new Move(x + 1, y + moveOffset));
+                }
+            }
         }
 
         if ((piece.getColor() == Piece.BLACK && y == 1) || (piece.getColor() == Piece.WHITE && y == 6)) {// Can move two if at the start
             if (intBoard[x][y + moveOffset] == Board.NONE && intBoard[x][y + (moveOffset * 2)] == Board.NONE) {// Path must be clear
                 moves.add(new Move(x, y + (moveOffset * 2)));
             }
-        }
+        }        
         return moves;
     }
 }

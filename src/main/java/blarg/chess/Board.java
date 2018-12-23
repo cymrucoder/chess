@@ -50,6 +50,10 @@ public class Board {
         //bv.drawBoard(generateIntBoard());
     }
 
+    public Piece[][] getPieces() {
+        return pieces;
+    }
+    
     private void setupPieces() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -139,9 +143,13 @@ public class Board {
 
             Piece tmpPiece = pieces[Integer.parseInt(chosenPiece.split(",")[0])][Integer.parseInt(chosenPiece.split(",")[1])];
             pieces[Integer.parseInt(chosenPiece.split(",")[0])][Integer.parseInt(chosenPiece.split(",")[1])] = null;
+            
+            if (pieces[moveCandidates.get(chosenPiece).get(chosenMove).getX()][moveCandidates.get(chosenPiece).get(chosenMove).getY()] != null) {// If moving onto a piece, capture it
+                System.out.println("Captured " + pieces[moveCandidates.get(chosenPiece).get(chosenMove).getX()][moveCandidates.get(chosenPiece).get(chosenMove).getY()]);
+                pieces[moveCandidates.get(chosenPiece).get(chosenMove).getX()][moveCandidates.get(chosenPiece).get(chosenMove).getY()] = null;
+            }
+            
             pieces[moveCandidates.get(chosenPiece).get(chosenMove).getX()][moveCandidates.get(chosenPiece).get(chosenMove).getY()] = tmpPiece;
-            //}
-
             bv.drawBoard(generateIntBoard());
         }
         

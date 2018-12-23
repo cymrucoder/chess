@@ -30,13 +30,24 @@ public class Piece {
     private PieceBehavior behavior;
     private int color;
     
-    public Piece(String name, int color) {
+    private int x;
+    private int y;
+    
+    public Piece(String name, int color, int x, int y) {
         behavior = PieceBehavior.getBehaviorForName(name);
         this.color = color;
+        this.x = x;
+        this.y = y;
     }
-    
+        
     public List<Move> getMoves() {
         return behavior.getMoves();
+    }
+    
+    public void move(int moveIndex) {
+        Move move = getMoves().get(moveIndex);
+        x = move.getX();
+        y = move.getY();
     }
     
     public int getColor() {

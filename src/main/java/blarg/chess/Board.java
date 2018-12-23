@@ -1,6 +1,7 @@
 package blarg.chess;
 
 import blarg.chess.view.BoardView;
+import java.util.List;
 
 /**
  *
@@ -39,6 +40,8 @@ public class Board {
         this.bv = new BoardView();
         bv.drawBoard(generateIntBoard());
 
+        nextPlay();
+        bv.drawBoard(generateIntBoard());
     }
     
     private void setupPieces() {
@@ -49,8 +52,10 @@ public class Board {
         }
         
         for (int i = 0; i < 8; i++) {
-            pieces[i][1] = new Piece(Piece.PAWN, Piece.BLACK);
-            pieces[i][6] = new Piece(Piece.PAWN, Piece.WHITE);
+            pieces[i][1] = new Piece(Piece.PAWN, Piece.BLACK, i, 1);
+           // pieces[i][1].move(i, 1);
+            pieces[i][6] = new Piece(Piece.PAWN, Piece.WHITE, i, 6);
+            //pieces[i][6].move(i, 6);
         }
         
 //        pieces[0][0] = ROOK;
@@ -76,6 +81,21 @@ public class Board {
 //        
 //        pieces[3][7] = QUEEN * 20;
 //        pieces[4][7] = KING * 20;
+    }
+    
+    private void nextPlay() {
+        List<Move> moves = pieces[0][6].getMoves();
+        for (Move move : moves) {
+            System.out.println("" + move.getX() + " " + move.getY());
+        }
+        
+        if (moves.size() == 1) {
+            System.out.println("Moving to only move");
+            pieces[0][6].move(0);
+            Piece tmpPiece = pieces[0][6];
+            pieces[0][6] = null;
+            pieces[moves.get(0).getX()][moves.get(0).getY()] = tmpPiece;
+        }
     }
     
     private int[][] generateIntBoard() {

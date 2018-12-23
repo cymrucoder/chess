@@ -26,4 +26,8 @@ public abstract class PlayerBehavior {
     }
     
     public abstract Move decideMove(List<Move> candidateMoves);
+    
+    public void notifyWinRate(double winRate) {
+        
+    }
 }

@@ -14,12 +14,14 @@ import java.util.List;
  */
 public class NetworkBehavior extends PlayerBehavior {
 
-    Network network;
+    private Network network;
+    private double bestWinRate;
     
     public NetworkBehavior(Board board) {
         super();
         this.board = board;
         setupNetwork();
+        bestWinRate = 0.0;
     }
     
     private void setupNetwork() {
@@ -82,6 +84,18 @@ public class NetworkBehavior extends PlayerBehavior {
             }
         }
         return candidateMoves.get(0);
+    }
+    
+    @Override
+    public void notifyWinRate(double winRate) {
+        if (winRate > bestWinRate) {
+            System.out.println("New best win rate  " + winRate);
+            System.out.println("Values are " + network.toString());
+            bestWinRate = winRate;
+        } else {
+            network.undoAdjust();
+        }
+        network.adjustForError(winRate);
     }
 
 }

@@ -20,4 +20,8 @@ public class Player {
     public Move decideMove(List<Move> candidateMoves) {
         return behavior.decideMove(candidateMoves);
     }
+    
+    public void notifyWinRate(double winRate) {
+        behavior.notifyWinRate(winRate);
+    }
 }

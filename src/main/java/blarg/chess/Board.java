@@ -32,7 +32,10 @@ public class Board {
         Board board = new Board();
         //board.setupView();
         
-        board.runGames(100000);
+        for (int i = 0; i < 200; i++) {
+            board.runGames(10000);
+            board.notifyWinRates();
+        }
     }
 
     private BoardView bv;
@@ -44,6 +47,28 @@ public class Board {
         whitePlayer = new Player(this, "random");
         blackPlayer = new Player(this, "network");
         setupBoard();
+    }
+    
+    public void notifyWinRates() {
+        double whiteWinRate;
+        double blackWinRate;
+        
+        if (blackWins == 0) {// Avoid divide by 0
+            whiteWinRate = 1000000000.0;
+            blackWinRate = 0.0;
+        } else if (whiteWins == 0) {
+            blackWinRate = 1000000000.0;
+            whiteWinRate = 0.0;
+        } else {
+            whiteWinRate = ((double) whiteWins / (double) blackWins) * 100.0;
+            blackWinRate = ((double) blackWins / (double) whiteWins) * 100.0;
+        }
+        
+        whitePlayer.notifyWinRate(whiteWinRate);
+        blackPlayer.notifyWinRate(blackWinRate);
+        whiteWins = 0;
+        blackWins = 0;
+        totalGames = 0;
     }
     
     public void setupBoard() {
@@ -206,10 +231,6 @@ public class Board {
         return score;
     }
 
-    public void runPhessGames() {
-        
-    }
-
     private int whiteWins = 0;
     private int blackWins = 0;
     private int totalGames = 0;
@@ -221,7 +242,7 @@ public class Board {
             whiteWins++;
         } else if (score < 0) {
             blackWins++;
-        }
+        }        
         setupBoard();
     }
     
@@ -230,6 +251,7 @@ public class Board {
             nextPlay();
         }
         
-        System.out.println("White wins " + whiteWins + " black wins " + blackWins + " black won " + ((float)blackWins / (float)whiteWins) * 100 + "% of what white won");
+        System.out.println("White wins " + whiteWins + " black wins " + blackWins + " black won " + ((float)blackWins / (float)whiteWins) * 100.0 + "% of what white won");
+        setupBoard();
     }
 }

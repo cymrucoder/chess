@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -23,9 +25,11 @@ public class BoardView extends JFrame {
     private static final int BOARD_WIDTH = 800;
     private static final int BOARD_HEIGHT = 800;
     
-    private int board[][];
+    private int boardInts[][];
+    private Board board;
     
-    public BoardView() {
+    public BoardView(Board board) {
+        this.board = board;
         DrawCanvas dc = new DrawCanvas();
         dc.setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
         setContentPane(dc);
@@ -33,10 +37,27 @@ public class BoardView extends JFrame {
         pack();
         setTitle("Probably chess");
         setVisible(true);
+        addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                //System.out.println("Key reeleased");
+                board.notifyKeyPress();
+            }
+        });
     }
     
     public void drawBoard(int board[][]) {
-        this.board = board;
+        this.boardInts = board;
         repaint();
     }
     
@@ -70,13 +91,13 @@ public class BoardView extends JFrame {
                 System.exit(1);
             }
             
-            if (board != null) {
-                if (board.length != 0) {
-                    if (board[0].length != 0) {
-                        for (int i = 0; i < board.length; i++) {
-                            for (int j = 0; j < board[i].length; j++) {
-                                if (board[i][j] != Board.NONE) {
-                                    int piece = board[i][j];
+            if (boardInts != null) {
+                if (boardInts.length != 0) {
+                    if (boardInts[0].length != 0) {
+                        for (int i = 0; i < boardInts.length; i++) {
+                            for (int j = 0; j < boardInts[i].length; j++) {
+                                if (boardInts[i][j] != Board.NONE) {
+                                    int piece = boardInts[i][j];
                                     int color = Piece.BLACK;
                                     if (piece > Board.BLACK_KING) {
                                         color = Piece.WHITE;

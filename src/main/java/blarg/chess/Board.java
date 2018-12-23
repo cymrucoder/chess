@@ -56,9 +56,9 @@ public class Board {
         }
 
         for (int i = 0; i < 8; i++) {
-            pieces[i][1] = new Piece(Piece.PAWN, Piece.BLACK, i, 1);
+            pieces[i][1] = new Piece(this, Piece.PAWN, Piece.BLACK, i, 1);
            // pieces[i][1].move(i, 1);
-            pieces[i][6] = new Piece(Piece.PAWN, Piece.WHITE, i, 6);
+            pieces[i][6] = new Piece(this, Piece.PAWN, Piece.WHITE, i, 6);
             //pieces[i][6].move(i, 6);
         }
 
@@ -109,11 +109,14 @@ public class Board {
             for (int j = 0; j < 8; j++) {
                 if (pieces[i][j] != null) {
                     if (pieces[i][j].getColor() == Piece.WHITE) {
-                        movablePieces.add("" + i + "," + j);
-                        moveCandidates.put("" + i + "," + j, new ArrayList<>());
                         List<Move> moves = pieces[i][j].getMoves();
-                        for (Move move : moves) {
-                            moveCandidates.get("" + i + "," + j).add(move);
+                        
+                        if (moves.size() > 0) {// Pieces that can't moved can just be ignored
+                            movablePieces.add("" + i + "," + j);
+                            moveCandidates.put("" + i + "," + j, new ArrayList<>());
+                            for (Move move : moves) {
+                                moveCandidates.get("" + i + "," + j).add(move);
+                            }                            
                         }
                     }
                 }
@@ -128,23 +131,27 @@ public class Board {
         //if (moves.size() == 1) {
             //System.out.println("Moving to only move");
 
-        Random r = new Random();
+        if (movablePieces.isEmpty()) {
+            System.out.println("Stalemate");
+        } else {
+            Random r = new Random();
 
-        String chosenPiece = movablePieces.get(r.nextInt(movablePieces.size()));
-        int chosenMove = r.nextInt(moveCandidates.get(chosenPiece).size());
-        
-        pieces[Integer.parseInt(chosenPiece.split(",")[0])][Integer.parseInt(chosenPiece.split(",")[1])].move(chosenMove);
+            String chosenPiece = movablePieces.get(r.nextInt(movablePieces.size()));
+            int chosenMove = r.nextInt(moveCandidates.get(chosenPiece).size());
 
-        
-        Piece tmpPiece = pieces[Integer.parseInt(chosenPiece.split(",")[0])][Integer.parseInt(chosenPiece.split(",")[1])];
-        pieces[Integer.parseInt(chosenPiece.split(",")[0])][Integer.parseInt(chosenPiece.split(",")[1])] = null;
-        pieces[moveCandidates.get(chosenPiece).get(chosenMove).getX()][moveCandidates.get(chosenPiece).get(chosenMove).getY()] = tmpPiece;
-        //}
+            pieces[Integer.parseInt(chosenPiece.split(",")[0])][Integer.parseInt(chosenPiece.split(",")[1])].move(chosenMove);
 
-        bv.drawBoard(generateIntBoard());
+
+            Piece tmpPiece = pieces[Integer.parseInt(chosenPiece.split(",")[0])][Integer.parseInt(chosenPiece.split(",")[1])];
+            pieces[Integer.parseInt(chosenPiece.split(",")[0])][Integer.parseInt(chosenPiece.split(",")[1])] = null;
+            pieces[moveCandidates.get(chosenPiece).get(chosenMove).getX()][moveCandidates.get(chosenPiece).get(chosenMove).getY()] = tmpPiece;
+            //}
+
+            bv.drawBoard(generateIntBoard());
+        }
     }
 
-    private int[][] generateIntBoard() {
+    public int[][] generateIntBoard() {
         int intBoard[][] = new int[8][8];
 
         for (int i = 0; i < 8; i++) {

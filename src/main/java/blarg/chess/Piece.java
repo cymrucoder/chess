@@ -33,15 +33,26 @@ public class Piece {
     private int x;
     private int y;
     
-    public Piece(String name, int color, int x, int y) {
-        behavior = PieceBehavior.getBehaviorForName(name);
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+    
+    private Board board;
+    
+    public Piece(Board board, String name, int color, int x, int y) {
+        this.board = board;
+        behavior = PieceBehavior.getBehaviorForName(this, name);
         this.color = color;
         this.x = x;
         this.y = y;
     }
         
     public List<Move> getMoves() {
-        return behavior.getMoves();
+        return behavior.getMoves(board);
     }
     
     public void move(int moveIndex) {

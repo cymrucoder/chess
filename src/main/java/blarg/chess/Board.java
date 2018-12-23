@@ -2,10 +2,7 @@ package blarg.chess;
 
 import blarg.chess.view.BoardView;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 /**
  *
@@ -28,6 +25,8 @@ public class Board {
     public static final int WHITE_KING = 11;
 
     private Piece pieces[][];
+    private Player whitePlayer;
+    private Player blackPlayer;
 
     public static void main(String args[]) {
         Board board = new Board();
@@ -38,6 +37,8 @@ public class Board {
 
     public Board() {
 
+        whitePlayer = new Player(this, "random");
+        blackPlayer = new Player(this, "random");
         pieces = new Piece[8][8];
         setupPieces();
 
@@ -46,8 +47,6 @@ public class Board {
         bv.drawBoard(generateIntBoard());
 
         isWhitesTurn = true;
-        //nextPlay();
-        //bv.drawBoard(generateIntBoard());
     }
 
     public Piece[][] getPieces() {
@@ -63,9 +62,7 @@ public class Board {
 
         for (int i = 0; i < 8; i++) {
             pieces[i][1] = new Piece(this, Piece.PAWN, Piece.BLACK, i, 1);
-           // pieces[i][1].move(i, 1);
             pieces[i][6] = new Piece(this, Piece.PAWN, Piece.WHITE, i, 6);
-            //pieces[i][6].move(i, 6);
         }
 
 //        pieces[0][0] = ROOK;
@@ -101,8 +98,7 @@ public class Board {
             colorTurn = Piece.BLACK;
         }
 
-        List<String> movablePieces = new ArrayList<>();
-        Map<String, List<Move>> moveCandidates = new HashMap<>();
+        List<Move> moveCandidates = new ArrayList<>();
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -110,46 +106,41 @@ public class Board {
                     if (pieces[i][j].getColor() == colorTurn) {
                         List<Move> moves = pieces[i][j].getMoves();
 
-                        if (moves.size() > 0) {// Pieces that can't moved can just be ignored
-                            movablePieces.add("" + i + "," + j);
-                            moveCandidates.put("" + i + "," + j, new ArrayList<>());
-                            for (Move move : moves) {
-                                moveCandidates.get("" + i + "," + j).add(move);
-                            }
+                        for (Move move : moves) {
+                            moveCandidates.add(move);
                         }
                     }
                 }
             }
         }
 
-        //List<Move> moves = pieces[0][6].getMoves();
-        //for (Move move : moves) {
-        //    System.out.println("" + move.getX() + " " + move.getY());
-       // }
-
-        //if (moves.size() == 1) {
-            //System.out.println("Moving to only move");
-
-        if (movablePieces.isEmpty()) {
+        if (moveCandidates.isEmpty()) {
             System.out.println("Stalemate");
         } else {
-            Random r = new Random();
-
-            String chosenPiece = movablePieces.get(r.nextInt(movablePieces.size()));
-            int chosenMove = r.nextInt(moveCandidates.get(chosenPiece).size());
-
-            pieces[Integer.parseInt(chosenPiece.split(",")[0])][Integer.parseInt(chosenPiece.split(",")[1])].move(chosenMove);
-
-
-            Piece tmpPiece = pieces[Integer.parseInt(chosenPiece.split(",")[0])][Integer.parseInt(chosenPiece.split(",")[1])];
-            pieces[Integer.parseInt(chosenPiece.split(",")[0])][Integer.parseInt(chosenPiece.split(",")[1])] = null;
+            Move chosenMove;
             
-            if (pieces[moveCandidates.get(chosenPiece).get(chosenMove).getX()][moveCandidates.get(chosenPiece).get(chosenMove).getY()] != null) {// If moving onto a piece, capture it
-                System.out.println("Captured " + pieces[moveCandidates.get(chosenPiece).get(chosenMove).getX()][moveCandidates.get(chosenPiece).get(chosenMove).getY()]);
-                pieces[moveCandidates.get(chosenPiece).get(chosenMove).getX()][moveCandidates.get(chosenPiece).get(chosenMove).getY()] = null;
+            if (isWhitesTurn) {
+                chosenMove = whitePlayer.decideMove(moveCandidates);
+            } else {
+                chosenMove = blackPlayer.decideMove(moveCandidates);
+            }
+
+            int oldX = chosenMove.getOldX();
+            int oldY = chosenMove.getOldY();
+            int newX = chosenMove.getNewX();
+            int newY = chosenMove.getNewY();
+            
+            pieces[oldX][oldY].move(chosenMove);
+            
+            Piece tmpPiece = pieces[oldX][oldY];
+            pieces[oldX][oldY] = null;
+            
+            if (pieces[newX][newY] != null) {// If moving onto a piece, capture it
+                System.out.println("Captured " + pieces[newX][newY]);
+                pieces[newX][newY] = null;
             }
             
-            pieces[moveCandidates.get(chosenPiece).get(chosenMove).getX()][moveCandidates.get(chosenPiece).get(chosenMove).getY()] = tmpPiece;
+            pieces[newX][newY] = tmpPiece;
             bv.drawBoard(generateIntBoard());
         }
         

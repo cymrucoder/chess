@@ -55,10 +55,9 @@ public class Piece {
         return behavior.getMoves(board);
     }
     
-    public void move(int moveIndex) {
-        Move move = getMoves().get(moveIndex);
-        x = move.getX();
-        y = move.getY();
+    public void move(Move move) {
+        x = move.getNewX();
+        y = move.getNewY();
     }
     
     public int getColor() {

@@ -5,19 +5,37 @@ package blarg.chess;
  * @author cymrucoder
  */
 public class Move {
-    private int x;
-    private int y;
+    private int oldX;
+    private int oldY;
+    
+    private int newX;
+    private int newY;
 
     public Move(int x, int y) {
-        this.x = x;
-        this.y = y;
+        this.newX = x;
+        this.newY = y;
     }
     
-    public int getX() {
-        return x;
+    public Move(int oldX, int oldY, int newX, int newY) {
+        this.oldX = oldX;
+        this.oldY = oldY;
+        this.newX = newX;
+        this.newY = newY;
+    }
+    
+    public int getNewX() {
+        return newX;
     }
 
-    public int getY() {
-        return y;
+    public int getNewY() {
+        return newY;
+    }    
+
+    public int getOldX() {
+        return oldX;
+    }
+
+    public int getOldY() {
+        return oldY;
     }    
 }

@@ -28,8 +28,12 @@ public class NetworkBehavior extends PlayerBehavior {
         network = new Network();
         
         Layer inputLayer = new Layer();
-        Neuron friendlyPawnCountNeuron = new Neuron(0.0, 0.0, 0.0);
-        Neuron enemyPawnCountNeuron = new Neuron(0.0, 0.0, 0.0);
+        Neuron friendlyPawnCountNeuron = new Neuron();
+        friendlyPawnCountNeuron.addConnection(0);
+        friendlyPawnCountNeuron.setUseActivationFunction(true);
+        Neuron enemyPawnCountNeuron = new Neuron();
+        enemyPawnCountNeuron.addConnection(1);
+        enemyPawnCountNeuron.setUseActivationFunction(true);
         inputLayer.addNeuron(friendlyPawnCountNeuron);
         inputLayer.addNeuron(enemyPawnCountNeuron);
         
@@ -44,7 +48,10 @@ public class NetworkBehavior extends PlayerBehavior {
         //Neuron moveToMakeNeuron = new Neuron(0.5, 0.5, 0.5);
         //outputLayer.addNeuron(pieceToMoveNeuron);
         //outputLayer.addNeuron(moveToMakeNeuron );
-        Neuron shouldCaptureNeuron = new Neuron(0.0, 0.0, 0.0);
+        Neuron shouldCaptureNeuron = new Neuron();
+        shouldCaptureNeuron.addConnection(0);
+        shouldCaptureNeuron.addConnection(1);
+        shouldCaptureNeuron.setUseActivationFunction(true);
         outputLayer.addNeuron(shouldCaptureNeuron);
         
         network.addLayer(inputLayer);
@@ -90,7 +97,7 @@ public class NetworkBehavior extends PlayerBehavior {
     public void notifyWinRate(double winRate) {
         if (winRate > bestWinRate) {
             System.out.println("New best win rate  " + winRate);
-            System.out.println("Values are " + network.toString());
+            System.out.println("Values are: \n" + network.toString());
             bestWinRate = winRate;
         } else {
             network.undoAdjust();

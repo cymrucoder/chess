@@ -30,12 +30,12 @@ public class Board {
 
     public static void main(String args[]) {
         Board board = new Board();
-        //board.setupView();
+        board.setupView();
         
-        for (int i = 0; i < 200; i++) {
-            board.runGames(10000);
-            board.notifyWinRates();
-        }
+//        for (int i = 0; i < 200; i++) {
+//            board.runGames(1000);
+//            board.notifyWinRates();
+//        }
     }
 
     private BoardView bv;
@@ -98,6 +98,9 @@ public class Board {
             pieces[i][1] = new Piece(this, Piece.PAWN, Piece.BLACK, i, 1);
             pieces[i][6] = new Piece(this, Piece.PAWN, Piece.WHITE, i, 6);
         }
+        
+        pieces[4][0] = new Piece(this, Piece.KING, Piece.BLACK, 4, 0);
+        pieces[4][7] = new Piece(this, Piece.KING, Piece.WHITE, 4, 7);
 
 //        pieces[0][0] = ROOK;
 //        pieces[7][0] = ROOK;
@@ -201,9 +204,49 @@ public class Board {
             for (int j = 0; j < 8; j++) {
                 if (pieces[j][i] != null) {
                     if (pieces[j][i].getColor() == Piece.BLACK) {
-                        intBoard[j][i] = BLACK_PAWN;
+                        String type = pieces[j][i].getType();
+                        switch (type) {
+                            case Piece.KING:
+                                intBoard[j][i] = BLACK_KING;
+                                break;
+                            case Piece.QUEEN:
+                                intBoard[j][i] = BLACK_QUEEN;
+                                break;
+                            case Piece.ROOK:
+                                intBoard[j][i] = BLACK_ROOK;
+                                break;
+                            case Piece.KNIGHT:
+                                intBoard[j][i] = BLACK_KNIGHT;
+                                break;
+                            case Piece.BISHOP:
+                                intBoard[j][i] = BLACK_BISHOP;
+                                break;
+                            case Piece.PAWN:
+                                intBoard[j][i] = BLACK_PAWN;
+                                break;                                
+                        }
                     } else {
-                        intBoard[j][i] = WHITE_PAWN;
+                        String type = pieces[j][i].getType();
+                        switch (type) {
+                            case Piece.KING:
+                                intBoard[j][i] = WHITE_KING;
+                                break;
+                            case Piece.QUEEN:
+                                intBoard[j][i] = WHITE_QUEEN;
+                                break;
+                            case Piece.ROOK:
+                                intBoard[j][i] = WHITE_ROOK;
+                                break;
+                            case Piece.KNIGHT:
+                                intBoard[j][i] = WHITE_KNIGHT;
+                                break;
+                            case Piece.BISHOP:
+                                intBoard[j][i] = WHITE_BISHOP;
+                                break;
+                            case Piece.PAWN:
+                                intBoard[j][i] = WHITE_PAWN;
+                                break;
+                        }
                     }
                 } else {
                     intBoard[j][i] = NONE;

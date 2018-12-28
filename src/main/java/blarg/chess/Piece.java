@@ -22,11 +22,17 @@ public class Piece {
     private static final int WHITE_QUEEN = 10;
     private static final int WHITE_KING = 11;
     
-    public static String PAWN = "pawn";
+    public static final String PAWN = "pawn";
+    public static final String BISHOP = "bishop";
+    public static final String KNIGHT = "knight";
+    public static final String ROOK = "rook";
+    public static final String QUEEN = "queen";
+        public static final String KING = "king";
     
     public static int BLACK = 0;
     public static int WHITE = 1;
     
+    private String type;
     private PieceBehavior behavior;
     private int color;
     
@@ -45,6 +51,7 @@ public class Piece {
     
     public Piece(Board board, String name, int color, int x, int y) {
         this.board = board;
+        this.type = name;
         behavior = PieceBehavior.getBehaviorForName(this, name);
         this.color = color;
         this.x = x;
@@ -68,4 +75,8 @@ public class Piece {
 //        if ()
 //    }
     // Eh maybe
+
+    public String getType() {
+        return type;
+    }
 }

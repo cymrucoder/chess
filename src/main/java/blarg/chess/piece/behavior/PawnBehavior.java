@@ -37,12 +37,12 @@ public class PawnBehavior extends PieceBehavior {
             
             // Don't look for captures left/right if we're on the left/right side of the board
             if (x > 0) {
-                if (intBoard[x - 1][y + moveOffset] != Board.NONE && (intBoard[x - 1][y + moveOffset] % Board.WHITE_PAWN != Board.BLACK_KING) && piece.getColor() != board.getPieces()[x - 1][y + moveOffset].getColor()) {// We can capture any opposing piece other than a king
+                if (intBoard[x - 1][y + moveOffset] != Board.NONE && piece.getColor() != board.getPieces()[x - 1][y + moveOffset].getColor()) {// We can capture any opposing piece other than a king
                     moves.add(new Move(x, y, x - 1, y + moveOffset));
                 }
             }
             if (x < intBoard[x].length - 1) {
-                if (intBoard[x + 1][y + moveOffset] != Board.NONE && (intBoard[x + 1][y + moveOffset] % Board.WHITE_PAWN != Board.BLACK_KING && piece.getColor() != board.getPieces()[x + 1][y + moveOffset].getColor())) {
+                if (intBoard[x + 1][y + moveOffset] != Board.NONE && piece.getColor() != board.getPieces()[x + 1][y + moveOffset].getColor()) {
                     moves.add(new Move(x, y, x + 1, y + moveOffset));
                 }
             }

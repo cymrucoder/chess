@@ -32,15 +32,16 @@ public class Board {
         Board board = new Board();
         board.setupView();
         
-//        for (int i = 0; i < 200; i++) {
-//            board.runGames(1000);
-//            board.notifyWinRates();
-//        }
+        for (int i = 0; i < 200; i++) {
+            board.runGames(1000);
+            board.notifyWinRates();
+        }
     }
 
     private BoardView bv;
     private boolean isWhitesTurn;
     private boolean onePlayerStuck;
+    private int kingCaptured;
 
     public Board() {
 
@@ -76,6 +77,7 @@ public class Board {
         setupPieces();
         isWhitesTurn = true;
         onePlayerStuck = false;
+        kingCaptured = 0;
     }
     
     public void setupView() {
@@ -142,8 +144,15 @@ public class Board {
 
         List<Move> moveCandidates = getMoveCandidates(colorTurn);
 
-        if (moveCandidates.isEmpty()) {
-            //System.out.println("");
+        boolean canAnyPawnsMove = false;
+        
+        for (Move move : moveCandidates) {
+            if (Piece.PAWN.equals(pieces[move.getOldX()][move.getOldY()].getType())) {
+                canAnyPawnsMove = true;
+            }
+        }
+        
+        if (moveCandidates.isEmpty() || !canAnyPawnsMove) {
             if (onePlayerStuck) {
                 //System.out.println(calculateScore());
                 //setupBoard();
@@ -167,6 +176,10 @@ public class Board {
                 bv.drawBoard(generateIntBoard());
             }
             isWhitesTurn = !isWhitesTurn;
+            
+            if (kingCaptured != 0) {
+                notifyGameEnd(kingCaptured);
+            }
         }        
     }
     
@@ -181,8 +194,17 @@ public class Board {
         Piece tmpPiece = pieces[oldX][oldY];
         pieces[oldX][oldY] = null;
 
-        if (pieces[newX][newY] != null) {// If moving onto a piece, capture it
-            pieces[newX][newY] = null;
+        Piece pieceInNewSquare = pieces[newX][newY];
+        
+        if (pieceInNewSquare != null) {// If moving onto a piece, capture it
+            if (Piece.KING.equals(pieceInNewSquare.getType())) {
+                if (pieceInNewSquare.getColor() == Piece.WHITE) {
+                    kingCaptured = -1;
+                } else {
+                    kingCaptured = 1;
+                }
+            }
+            pieces[newX][newY] = null;            
         }
 
         pieces[newX][newY] = tmpPiece;

@@ -29,4 +29,8 @@ public abstract class PieceBehavior {
                 return new PawnBehavior(piece);
         }                
     }
+    
+    protected boolean isInBounds(int x, int y) {
+        return (x < 8 && x >= 0 && y < 8 && y >= 0);
+    }
 }

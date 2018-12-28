@@ -45,7 +45,7 @@ public class Board {
     public Board() {
 
         whitePlayer = new Player(this, "random");
-        blackPlayer = new Player(this, "network");
+        blackPlayer = new Player(this, "random");
         setupBoard();
     }
     
@@ -113,20 +113,13 @@ public class Board {
         pieces[4][7] = new Piece(this, Piece.KING, Piece.WHITE, 4, 7);
     }
 
-    private void nextPlay() {
-
-        int colorTurn = Piece.WHITE;
-
-        if (!isWhitesTurn) {
-            colorTurn = Piece.BLACK;
-        }
-
+    public List<Move> getMoveCandidates(int color) {
         List<Move> moveCandidates = new ArrayList<>();
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (pieces[i][j] != null) {
-                    if (pieces[i][j].getColor() == colorTurn) {
+                    if (pieces[i][j].getColor() == color) {
                         List<Move> moves = pieces[i][j].getMoves();
 
                         for (Move move : moves) {
@@ -136,6 +129,18 @@ public class Board {
                 }
             }
         }
+        return moveCandidates;
+    }
+    
+    private void nextPlay() {
+
+        int colorTurn = Piece.WHITE;
+
+        if (!isWhitesTurn) {
+            colorTurn = Piece.BLACK;
+        }
+
+        List<Move> moveCandidates = getMoveCandidates(colorTurn);
 
         if (moveCandidates.isEmpty()) {
             //System.out.println("");

@@ -11,14 +11,16 @@ import java.util.Random;
  */
 public class RandomBehavior extends PlayerBehavior {
 
+    Random rand;
+    
     public RandomBehavior(Board board) {
         super();
         this.board = board;
+        rand = new Random();
     }
     
     @Override
     public Move decideMove(List<Move> candidateMoves) {
-        Random r = new Random();
-        return candidateMoves.get(r.nextInt(candidateMoves.size()));        
+        return candidateMoves.get(rand.nextInt(candidateMoves.size()));        
     }    
 }

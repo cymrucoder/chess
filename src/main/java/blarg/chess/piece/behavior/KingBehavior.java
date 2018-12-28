@@ -34,6 +34,7 @@ public class KingBehavior extends PieceBehavior  {
                         if (candidateY < intBoard[x].length && candidateY >= 0) {//Don't move off ends of board
                             Piece candidateSquarePiece = board.getPieces()[candidateX][candidateY];
                             if (candidateSquarePiece == null || piece.getColor() != candidateSquarePiece.getColor()) {// We can capture any opposing piece
+                                // TODO eventually kings shouldn't be able to move into check, make a copy of board move the piece then call getMoves or whatever
                                 moves.add(new Move(x, y, candidateX, candidateY));
                             }
                         }

@@ -175,7 +175,7 @@ public class Board {
         int oldY = move.getOldY();
         int newX = move.getNewX();
         int newY = move.getNewY();
-
+        
         pieces[oldX][oldY].move(move);
 
         Piece tmpPiece = pieces[oldX][oldY];

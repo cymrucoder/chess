@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -77,4 +78,32 @@ public class KingBehaviorTest {
         assertTrue(actualMoves.containsAll(expectedMoves));
         assertEquals(expectedMoves.size(), actualMoves.size());
     }
+    
+    @Ignore
+    @Test
+    public void testGetMove_whenAt43_shouldntReturnMovesInCheck() {
+        Board board = new Board();
+        board.clearBoard();
+        board.setupKings();
+        board.setupPawns();
+        
+        KingBehavior kb2;
+        Piece piece = new Piece(board, Piece.KING, Piece.WHITE, 4, 3);
+        kb2 = new KingBehavior(piece);
+        board.makeMove(new Move(4, 7, 4, 3));
+        
+        List<Move> actualMoves = kb2.getMoves(board);
+
+        List<Move> expectedMoves = new ArrayList<>();
+        expectedMoves.add(new Move(4, 3, 3, 3));
+        expectedMoves.add(new Move(4, 3, 5, 3));
+        expectedMoves.add(new Move(4, 3, 3, 4));
+        expectedMoves.add(new Move(4, 3, 4, 4));
+        expectedMoves.add(new Move(4, 3, 5, 4));
+        
+
+        assertTrue(actualMoves.containsAll(expectedMoves));
+        assertEquals(expectedMoves.size(), actualMoves.size());
+    }
+    
 }

@@ -29,12 +29,28 @@ public class KingBehavior extends PieceBehavior  {
                 int candidateX = x + i;
                 int candidateY = y + j;
                 
+                CandidateMoveCheck:
                 if (!(candidateX == x && candidateY == y)) {// Can't move onto square already on
                     if (isInBounds(candidateX, candidateY)) {
                         Piece candidateSquarePiece = board.getPieces()[candidateX][candidateY];
                         if (candidateSquarePiece == null || piece.getColor() != candidateSquarePiece.getColor()) {// We can capture any opposing piece
-                            // TODO eventually kings shouldn't be able to move into check, make a copy of board move the piece then call getMoves or whatever
-                            moves.add(new Move(x, y, candidateX, candidateY));
+                            // TODO What if you're trying to move onto a king?  Has to be allowed, ignore the will be in check move because you'll have won
+
+                            //Board resultingBoard = board;                            
+                            Move move = new Move(x, y, candidateX, candidateY);                            
+//                            board.makeMove(move);
+//                            List<Move> moveCandidates = board.getMoveCandidates(piece.getColor() == Piece.WHITE ? Piece.BLACK : Piece.WHITE);
+//                            
+//                            for (Move moveCandidate: moveCandidates) {
+//                                if (moveCandidate.getNewX() == candidateX && moveCandidate.getNewY() == candidateY) {
+//                                    Move reverseMove = new Move(candidateX, candidateY, x, y);                            
+//                                    board.makeMove(reverseMove);
+//                                    break CandidateMoveCheck;
+//                                }
+//                            }
+//                            Move reverseMove = new Move(candidateX, candidateY, x, y);
+//                            board.makeMove(reverseMove);
+                            moves.add(move);
                         }
                     }
                 }

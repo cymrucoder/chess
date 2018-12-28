@@ -27,7 +27,7 @@ public class Piece {
     public static final String KNIGHT = "knight";
     public static final String ROOK = "rook";
     public static final String QUEEN = "queen";
-        public static final String KING = "king";
+    public static final String KING = "king";
     
     public static int BLACK = 0;
     public static int WHITE = 1;

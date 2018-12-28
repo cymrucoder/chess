@@ -20,9 +20,12 @@ public abstract class PieceBehavior {
     
     public static PieceBehavior getBehaviorForName(Piece piece, String name) {
         switch (name) {
-            case "pawn":
+            case Piece.KING:
+                return new KingBehavior(piece);
+            case Piece.PAWN:
                 return new PawnBehavior(piece);
             default:
+                System.exit(1);
                 return new PawnBehavior(piece);
         }                
     }

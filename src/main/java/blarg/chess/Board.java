@@ -42,11 +42,13 @@ public class Board {
     private boolean isWhitesTurn;
     private boolean onePlayerStuck;
     private int kingCaptured;
+    private int kingCaps;
+    private int pawnCount;
 
     public Board() {
 
         whitePlayer = new Player(this, "random");
-        blackPlayer = new Player(this, "random");
+        blackPlayer = new Player(this, "network");
         setupBoard();
     }
     
@@ -156,6 +158,7 @@ public class Board {
             if (onePlayerStuck) {
                 //System.out.println(calculateScore());
                 //setupBoard();
+                pawnCount++;
                 notifyGameEnd(calculateScore());
             } else {
                 onePlayerStuck = true;
@@ -178,6 +181,7 @@ public class Board {
             isWhitesTurn = !isWhitesTurn;
             
             if (kingCaptured != 0) {
+                kingCaps++;
                 notifyGameEnd(kingCaptured);
             }
         }        
@@ -307,7 +311,9 @@ public class Board {
             nextPlay();
         }
         
-        System.out.println("White wins " + whiteWins + " black wins " + blackWins + " black won " + ((float)blackWins / (float)whiteWins) * 100.0 + "% of what white won");
+        System.out.println("White wins " + whiteWins + " black wins " + blackWins + " black won " + ((float)blackWins / (float)whiteWins) * 100.0 + "% of what white won.  King caps " + ": " + kingCaps + ", pawn counts: " + pawnCount);
+        kingCaps = 0;
+        pawnCount = 0;
         setupBoard();
     }
 }

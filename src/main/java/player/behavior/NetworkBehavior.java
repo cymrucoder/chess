@@ -7,6 +7,7 @@ import blarg.newnet.Network;
 import blarg.newnet.Neuron;
 import blarg.newnet.ValueTracker;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -16,12 +17,14 @@ public class NetworkBehavior extends PlayerBehavior {
 
     private Network network;
     private double bestWinRate;
+    Random rand;
     
     public NetworkBehavior(Board board) {
         super();
         this.board = board;
         setupNetwork();
         bestWinRate = 0.0;
+        rand = new Random();
     }
     
     private void setupNetwork() {
@@ -85,12 +88,12 @@ public class NetworkBehavior extends PlayerBehavior {
         
         if (outputs.get(0) > 0.0) {
             for (Move move : candidateMoves) {
-                if (move.getOldX() != move.getNewX()) {
+                if (board.getPieces()[move.getNewX()][move.getNewY()] != null) {
                     return move;
                 }
             }
         }
-        return candidateMoves.get(0);
+        return candidateMoves.get(rand.nextInt(candidateMoves.size()));
     }
     
     @Override

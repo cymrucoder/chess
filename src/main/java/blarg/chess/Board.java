@@ -91,6 +91,14 @@ public class Board {
         return pieces;
     }
     
+    public int getCurrentTurnColor() {
+        if (isWhitesTurn) {
+            return Piece.WHITE;
+        } else {
+            return Piece.BLACK;
+        }
+    }
+    
     private void setupPieces() {
         clearBoard();
         setupPawns();

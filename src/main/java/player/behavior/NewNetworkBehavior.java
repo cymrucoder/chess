@@ -17,13 +17,13 @@ import java.util.logging.Logger;
  *
  * @author cymrucoder
  */
-public class NetworkBehavior extends PlayerBehavior {
+public class NewNetworkBehavior extends PlayerBehavior {
 
     private Network network;
     private double bestWinRate;
     Random rand;
     
-    public NetworkBehavior(Board board) {
+    public NewNetworkBehavior(Board board) {
         super();
         this.board = board;
         setupNetwork();
@@ -66,9 +66,9 @@ public class NetworkBehavior extends PlayerBehavior {
 //        //network.addLayer(middleLayer);
 //        network.addLayer(outputLayer);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(NetworkBehavior.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewNetworkBehavior.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(NetworkBehavior.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewNetworkBehavior.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

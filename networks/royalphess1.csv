@@ -1,0 +1,7 @@
+inputs,hidden,outputs,outputnames
+number of pawns,all,all,move pawn forward
+number of enemy pawns,all,all,capture with pawn
+can capture pawns,all,all,move king forward
+can enemy capture pawns,all,all,move king back
+can capture king,all,all,move king sideways
+king in check,all,all,capture with king

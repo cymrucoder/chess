@@ -17,6 +17,8 @@ public abstract class PlayerBehavior {
                 return new RandomBehavior(board);
             case "network": 
                 return new NetworkBehavior(board);
+            case "newnetwork": 
+                return new NewNetworkBehavior(board);
             case "alwayscap": 
                 return new AlwaysCaptureBehavior(board);
             default:

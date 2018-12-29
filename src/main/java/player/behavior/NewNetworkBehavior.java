@@ -116,11 +116,13 @@ public class NewNetworkBehavior extends PlayerBehavior {
                 canCaptureKing = 1.0;
             }
         }
-            
+        
+        int moveOffset = 1;// Using this later
         int enemyColor = Piece.WHITE;
             
         if (board.getCurrentTurnColor() == Piece.WHITE) {
             enemyColor = Piece.BLACK;
+            moveOffset = -11;// We're moving "down" the board numerically (in my backwards system) if we're white
         } 
             
         List<Move> enemyMoves = board.getMoveCandidates(enemyColor);
@@ -152,13 +154,55 @@ public class NewNetworkBehavior extends PlayerBehavior {
         ValueTracker outputs = network.process(inputs);
         //System.out.println("Output " + outputs.get(0));
         
-        if (outputs.get(0) > 0.0) {
-            for (Move move : candidateMoves) {
-                if (board.getPieces()[move.getNewX()][move.getNewY()] != null) {
-                    return move;
-                }
+        int selectedMove = 0;
+                
+        for (int i = 0; i < outputs.size(); i++) {
+            if (outputs.get(i) > outputs.get(selectedMove)) {
+                selectedMove = i;
             }
         }
+        
+        for (Move move : candidateMoves) {
+            String thisType = board.getPieces()[move.getOldX()][move.getOldY()].getType();
+            String typeInNewSquare;
+            
+            if (board.getPieces()[move.getNewX()][move.getNewY()] == null) {
+                typeInNewSquare = "";
+            } else {
+                typeInNewSquare = board.getPieces()[move.getNewX()][move.getNewY()].getType();
+            }
+            
+            if (selectedMove == 1 && Piece.PAWN.equals(thisType) && Piece.PAWN.equals(typeInNewSquare)) {
+                return move;
+            }
+            
+            if (selectedMove == 2 && Piece.KING.equals(typeInNewSquare)) {
+                return move;
+            }
+            
+            if (selectedMove == 3 && Piece.KING.equals(thisType) && (move.getOldY() - move.getNewY() == moveOffset)) {// Last bit is "are we moving forward"
+                return move;
+            }
+            
+            if (selectedMove == 4 && Piece.KING.equals(thisType) && (move.getOldX() != move.getNewX())) {
+                return move;
+            }
+            
+            if (selectedMove == 5 && Piece.KING.equals(thisType) && (move.getOldY() - move.getNewY() == -moveOffset)) {
+                return move;
+            }
+        }
+        
+//        if (outputs.get(0) > 0.0) {
+//            for (Move move : candidateMoves) {
+//                if (board.getPieces()[move.getNewX()][move.getNewY()] != null) {
+//                    return move;
+//                }
+//            }
+//        }
+
+        
+
         return candidateMoves.get(rand.nextInt(candidateMoves.size()));
     }
     

@@ -48,7 +48,7 @@ public class Board {
     public Board() {
 
         whitePlayer = new Player(this, "random");
-        blackPlayer = new Player(this, "network");
+        blackPlayer = new Player(this, "newnetwork");
         setupBoard();
     }
     

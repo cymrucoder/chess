@@ -2,7 +2,9 @@ package blarg.chess;
 
 import blarg.chess.view.BoardView;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -28,13 +30,14 @@ public class Board {
     private Player whitePlayer;
     private Player blackPlayer;
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws InterruptedException {
         Board board = new Board();
         board.setupView();
         
         for (int i = 0; i < 200; i++) {
             board.runGames(1000);
             board.notifyWinRates();
+            //TimeUnit.SECONDS.sleep(1);
         }
     }
 
@@ -44,6 +47,10 @@ public class Board {
     private int kingCaptured;
     private int kingCaps;
     private int pawnCount;
+    private int[][] gameOneTurnAgo;
+    private int[][] gameTwoTurnsAgo;
+    private int[][] gameThreeTurnsAgo;
+    private int[][] gameFourTurnsAgo;
 
     public Board() {
 
@@ -80,6 +87,10 @@ public class Board {
         isWhitesTurn = true;
         onePlayerStuck = false;
         kingCaptured = 0;
+        gameOneTurnAgo = null;
+        gameTwoTurnsAgo = null;
+        gameThreeTurnsAgo = null;
+        gameFourTurnsAgo = null;
     }
     
     public void setupView() {
@@ -152,6 +163,28 @@ public class Board {
             colorTurn = Piece.BLACK;
         }
 
+        // Prevent repeated boards
+        if (gameThreeTurnsAgo != null) {
+            gameFourTurnsAgo = new int[gameThreeTurnsAgo.length][];
+            for(int i = 0; i < gameThreeTurnsAgo.length; i++) {
+                gameFourTurnsAgo[i] = gameThreeTurnsAgo[i].clone();
+            }
+        }
+        if (gameTwoTurnsAgo != null) {            
+            gameThreeTurnsAgo = new int[gameTwoTurnsAgo.length][];
+            for(int i = 0; i < gameTwoTurnsAgo.length; i++) {
+                gameThreeTurnsAgo[i] = gameTwoTurnsAgo[i].clone();
+            }
+        }
+        if (gameOneTurnAgo != null) {            
+            gameTwoTurnsAgo = new int[gameOneTurnAgo.length][];
+            for(int i = 0; i < gameOneTurnAgo.length; i++) {
+                gameTwoTurnsAgo[i] = gameOneTurnAgo[i].clone();
+            }
+        }
+        
+        gameOneTurnAgo = generateIntBoard();
+        
         List<Move> moveCandidates = getMoveCandidates(colorTurn);
 
         boolean canAnyPawnsMove = false;
@@ -171,6 +204,20 @@ public class Board {
             } else {
                 onePlayerStuck = true;
                 isWhitesTurn = !isWhitesTurn;
+                
+                if (Arrays.deepEquals(generateIntBoard(), gameFourTurnsAgo)) {
+                    notifyGameEnd(0);                    
+//                    System.out.println("Four turns ago board");
+//                    printArray(gameFourTurnsAgo);
+//                    System.out.println("Three turns ago board");
+//                    printArray(gameThreeTurnsAgo);
+//                    System.out.println("Two turns ago board");
+//                    printArray(gameTwoTurnsAgo);
+//                    System.out.println("One turn ago board");
+//                    printArray(gameOneTurnAgo);
+//                    System.out.println("Current board");
+//                    printArray(generateIntBoard());
+                }
             }
             
         } else {
@@ -192,7 +239,7 @@ public class Board {
                 kingCaps++;
                 notifyGameEnd(kingCaptured);
             }
-        }        
+        }
     }
     
     public void makeMove(Move move) {
@@ -278,7 +325,6 @@ public class Board {
                 }
             }
         }
-
         return intBoard;
     }
 
@@ -304,7 +350,6 @@ public class Board {
     private int totalGames = 0;
     
     private void notifyGameEnd(int score) {
-       // System.out.println(score);
         totalGames++;
         if (score > 0) {
             whiteWins++;
@@ -323,5 +368,19 @@ public class Board {
         kingCaps = 0;
         pawnCount = 0;
         setupBoard();
+    }
+    
+    private void printArray(int pieces[][]) {
+        for (int i = 0; i < pieces.length; i++) {
+            for (int j = 0; j < pieces[i].length; j++) {
+                if (pieces[j][i] >= 0) {// Board is flipped if print i,j so print j,i
+                    System.out.print("" + pieces[j][i] + " ");
+                } else {
+                    System.out.print("  ");
+                }
+            }
+            System.out.println("");
+        }
+        System.out.println("");
     }
 }

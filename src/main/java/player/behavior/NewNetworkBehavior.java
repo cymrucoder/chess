@@ -34,6 +34,7 @@ public class NewNetworkBehavior extends PlayerBehavior {
     private void setupNetwork() {
         try {
             network = new Network(new FileReader("networks\\royalphess1.csv"));
+            network.enableView();
             
 //        Layer inputLayer = new Layer();
 //        Neuron friendlyPawnCountNeuron = new Neuron();
@@ -211,11 +212,11 @@ public class NewNetworkBehavior extends PlayerBehavior {
         if (winRate > bestWinRate) {
             System.out.println("New best win rate  " + winRate);
             System.out.println("Values are: \n" + network.toString());
-            bestWinRate = winRate;
+            bestWinRate = winRate;            
         } else {
             network.undoAdjust();
         }
         network.adjustForError(winRate);
+        network.updateView();
     }
-
 }
